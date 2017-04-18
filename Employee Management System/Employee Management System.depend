@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1492527642 source:c:\users\jubel\desktop\new folder\my project\employee management system\employee management.c
+	<stdio.h>
+	<string.h>
+	<conio.h>
+	<time.h>
+	<stdlib.h>
+	<windows.h>
+	<stdbool.h>
+
