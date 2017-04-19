@@ -1,3 +1,4 @@
+
 #include<stdio.h>
 #include<string.h>
 #include<conio.h>
@@ -5,7 +6,9 @@
 #include<stdlib.h>
 #include<windows.h>
 #include<stdbool.h>
+
 // This structure work to get time
+
 struct times
 {
     WORD wYear;
@@ -30,7 +33,7 @@ struct account
 };
 typedef struct account Account;
 
-// this structure work to get daily update information  
+// this structure work to get daily update information
 struct dailyCount
 {
     Times entryTime;
@@ -45,7 +48,7 @@ typedef struct dailyCount Day;
 
 //Here all new employee all information add this structure
 
-struct Employees        
+struct Employees
 {
     char first_name[20];
     char last_name[20];
@@ -106,6 +109,7 @@ snode* createNode(Employee emp);
 void AddEmployeeLast(Employee list);
 void createEmployeeList();
 
+// all display function
 void all_employe_display();
 void search_employee_Display(char id[]);
 void view_employee_personal_info(char id[]);
@@ -114,13 +118,14 @@ void employee_per_month_salary_view();
 void per_employee_salary_view(char id[]);
 void dailyEarningMessageDisplay(char id[]);
 
-int isIdCompare(char id[]);
-void deleteEmployeeInformation(char id[]);
 //<start time function
 Times getTimes();
 Times getCurrentTime();
 int timeCorrection(int hour);
  //<end time function
+
+int isIdCompare(char id[]);
+void deleteEmployeeInformation(char id[]);
 void employee_personal_information_update(char id[]);
 void perDayUpdate(int type);
 double perDayTimeHourCount(int h1,int m1,int h2,int m2,int position);
@@ -215,6 +220,8 @@ void mainMenue()
     printf("\n\n");
 }
 
+// This function work to display employee menu
+
 void employeeMenue()
 {
     system("cls");
@@ -260,6 +267,7 @@ void employeeMenue()
 
 }
 
+// Thsi function work to display update menu
 
 void updateMenu()
 {
@@ -302,6 +310,8 @@ void updateMenu()
     printf("\n\n");
 }
 
+// This function work to display salary menu
+
 void salaryMenu()
 {
     system("cls");
@@ -342,6 +352,7 @@ void salaryMenu()
     printf("\n\n");
 
 }
+// Thsi function work to test user name
 
 int userNameTest(char name[20])
 {
@@ -358,6 +369,8 @@ int userNameTest(char name[20])
 
     return flag;
 }
+
+// Thsi function work to create account
 
 void signUpAccount()
 {
@@ -1113,7 +1126,8 @@ void deleteEmployeeInformation(char id[])
         getch();
     }
 }
-// This function work to displauy employee personal information
+// This function work to display employee personal information
+
 void search_employee_Display_no_2(char id[])
 {
     system("cls");
@@ -1163,6 +1177,142 @@ void search_employee_Display_no_2(char id[])
         printf("There have no id\n");
     }
 
+}
+
+// This function work to display per month salary
+
+void employee_per_month_salary_view()
+{
+    int i,j=8;
+    snode *temp = head;
+    gotoxy(49,1);
+    printf("All Employee Salary");
+    for(i=40; i<75; i++)
+    {
+        gotoxy(i,3);
+        printf("%c",254);
+    }
+    gotoxy(0,5);
+    printf("Employee name");
+    gotoxy(16,5);
+    printf("Employee ID");
+    gotoxy(32,5);
+    printf("Base salary");
+    gotoxy(48,5);
+    printf("Over time");
+    gotoxy(64,5);
+    printf("Total Salary");
+    gotoxy(80,5);
+    printf("Total Present");
+    gotoxy(96,5);
+    printf("Total Absence");
+    for(i=0; i<115; i++)
+    {
+        gotoxy(i,6);
+        printf("%c",240);
+    }
+
+    while(temp != NULL)
+    {
+        double base_salary = baseSalaryCalculate(temp->member.id);
+        double bonus_salary = bonusSalaryCalculate(temp->member.id);
+        double total_salary = totalMonthlySalary(temp->member.id);
+        int present = calculatePresent(temp->member.id);
+        int absence = calculateAbsence(temp->member.id);
+        gotoxy(0,j);
+        printf("%s %s",temp->member.first_name,temp->member.last_name);
+        gotoxy(18,j);
+        printf("%s",temp->member.id);
+        gotoxy(32,j);
+        printf("%.3lf $",base_salary);
+        gotoxy(48,j);
+        printf("%.3lf $",bonus_salary);
+        gotoxy(64,j);
+        printf("%.3lf $",total_salary);
+        gotoxy(80,j);
+        printf("%d day",present);
+        gotoxy(96,j);
+        printf("%d day",absence);
+        temp = temp->next;
+        j+=2;
+    }
+
+    printf("\n");
+}
+
+// This function work to display per month salary
+
+void per_employee_salary_view(char id[])
+{
+    system("cls");
+    int position = isIdCompare(id);
+    int i;
+    snode *temp = head;
+    for(i=1; i<position; i++)
+    {
+        temp = temp->next;
+    }
+
+    if(position != -1)
+    {
+        double base_salary = baseSalaryCalculate(temp->member.id);
+        double bonus_salary = bonusSalaryCalculate(temp->member.id);
+        double total_salary = totalMonthlySalary(temp->member.id);
+        int present = calculatePresent(temp->member.id);
+        int absence = calculateAbsence(temp->member.id);
+
+        int totalHour =  totalHourWork(temp->member.id);
+        int totalMin1 = totalMin(temp->member.id);
+        int totalTime = (totalHour*60)+totalMin1;
+        int finalHour = totalTime/60;
+        int finalMin = totalTime%60;
+        gotoxy(45,8);
+        printf("Id                : %s",temp->member.id);
+        gotoxy(45,10);
+        printf("Name              : %s %s",temp->member.first_name,temp->member.last_name);
+        gotoxy(45,12);
+        printf("Total present    -> %d day",present);
+        gotoxy(45,14);
+        printf("Total Absence    -> %d day",absence);
+        gotoxy(45,16);
+        printf("Total time       -> %d hour %d min",finalHour,finalMin);
+        gotoxy(45,18);
+        printf("Base salary      -> %.3lf $",base_salary);
+        gotoxy(45,20);
+        printf("Over Time salary -> %.3lf $",bonus_salary);
+        gotoxy(45,22);
+        printf("Total Salary     -> %.3lf $\n",total_salary);
+
+    }
+    else
+    {
+        gotoxy(45,12);
+        printf("This id number is not here\n");
+    }
+
+
+}
+
+//This function work to display daily working message
+
+void dailyEarningMessageDisplay(char id[])
+{
+    system("cls");
+    int i;
+    int position = isIdCompare(id);
+    snode *temp = head;
+    for(i=1; i<position; i++)
+    {
+        temp = temp->next;
+    }
+    gotoxy(45,10);
+    printf("Today Entry Time        -> %d : %d",temp->member.dayStatistics[currentMonthDay].entryTime.wHour,temp->member.dayStatistics[currentMonthDay].entryTime.wMinute);
+    gotoxy(45,12);
+    printf("Today Exit Time         -> %d : %d",temp->member.dayStatistics[currentMonthDay].exitTime.wHour,temp->member.dayStatistics[currentMonthDay].exitTime.wMinute);
+    gotoxy(45,14);
+    printf("Today Your Working Hour -> %d hour %d Minutes",temp->member.dayStatistics[currentMonthDay].hour,temp->member.dayStatistics[currentMonthDay].min);
+    gotoxy(45,16);
+    printf("Today your Earn         -> %.3lf $\n",temp->member.dayStatistics[currentMonthDay].dailyIncome);
 }
 
 //This function work to update employee personal information
@@ -1555,27 +1705,6 @@ double perDayEarningCount(int tmHour,int tmMin,int position)
     return perDayTotalEarn;
 }
 
-//This function work to display daily working message
-
-void dailyEarningMessageDisplay(char id[])
-{
-    system("cls");
-    int i;
-    int position = isIdCompare(id);
-    snode *temp = head;
-    for(i=1; i<position; i++)
-    {
-        temp = temp->next;
-    }
-    gotoxy(45,10);
-    printf("Today Entry Time        -> %d : %d",temp->member.dayStatistics[currentMonthDay].entryTime.wHour,temp->member.dayStatistics[currentMonthDay].entryTime.wMinute);
-    gotoxy(45,12);
-    printf("Today Exit Time         -> %d : %d",temp->member.dayStatistics[currentMonthDay].exitTime.wHour,temp->member.dayStatistics[currentMonthDay].exitTime.wMinute);
-    gotoxy(45,14);
-    printf("Today Your Working Hour -> %d hour %d Minutes",temp->member.dayStatistics[currentMonthDay].hour,temp->member.dayStatistics[currentMonthDay].min);
-    gotoxy(45,16);
-    printf("Today your Earn         -> %.3lf $\n",temp->member.dayStatistics[currentMonthDay].dailyIncome);
-}
 
 // This function work to display calculate present
 
@@ -1702,7 +1831,7 @@ int numberFormateCorrection(char arr[])
 
 }
 
-// This function work to update calculate base salary 
+// This function work to update calculate base salary
 
 double baseSalaryCalculate(char id[])
 {
@@ -1802,118 +1931,6 @@ double totalMonthlySalary(char id[])
     double bonusSalary = bonusSalaryCalculate(id);
     double totalSalary = baseSalary + bonusSalary;
     return totalSalary;
-
-}
-// Thsi function work to calculate per month salary
-void employee_per_month_salary_view()
-{
-    int i,j=8;
-    snode *temp = head;
-    gotoxy(49,1);
-    printf("All Employee Salary");
-    for(i=40; i<75; i++)
-    {
-        gotoxy(i,3);
-        printf("%c",254);
-    }
-    gotoxy(0,5);
-    printf("Employee name");
-    gotoxy(16,5);
-    printf("Employee ID");
-    gotoxy(32,5);
-    printf("Base salary");
-    gotoxy(48,5);
-    printf("Over time");
-    gotoxy(64,5);
-    printf("Total Salary");
-    gotoxy(80,5);
-    printf("Total Present");
-    gotoxy(96,5);
-    printf("Total Absence");
-    for(i=0; i<115; i++)
-    {
-        gotoxy(i,6);
-        printf("%c",240);
-    }
-
-    while(temp != NULL)
-    {
-        double base_salary = baseSalaryCalculate(temp->member.id);
-        double bonus_salary = bonusSalaryCalculate(temp->member.id);
-        double total_salary = totalMonthlySalary(temp->member.id);
-        int present = calculatePresent(temp->member.id);
-        int absence = calculateAbsence(temp->member.id);
-        gotoxy(0,j);
-        printf("%s %s",temp->member.first_name,temp->member.last_name);
-        gotoxy(18,j);
-        printf("%s",temp->member.id);
-        gotoxy(32,j);
-        printf("%.3lf $",base_salary);
-        gotoxy(48,j);
-        printf("%.3lf $",bonus_salary);
-        gotoxy(64,j);
-        printf("%.3lf $",total_salary);
-        gotoxy(80,j);
-        printf("%d day",present);
-        gotoxy(96,j);
-        printf("%d day",absence);
-        temp = temp->next;
-        j+=2;
-    }
-
-    printf("\n");
-}
-
-// This function work to display per month salary
-
-void per_employee_salary_view(char id[])
-{
-    system("cls");
-    int position = isIdCompare(id);
-    int i;
-    snode *temp = head;
-    for(i=1; i<position; i++)
-    {
-        temp = temp->next;
-    }
-
-    if(position != -1)
-    {
-        double base_salary = baseSalaryCalculate(temp->member.id);
-        double bonus_salary = bonusSalaryCalculate(temp->member.id);
-        double total_salary = totalMonthlySalary(temp->member.id);
-        int present = calculatePresent(temp->member.id);
-        int absence = calculateAbsence(temp->member.id);
-
-        int totalHour =  totalHourWork(temp->member.id);
-        int totalMin1 = totalMin(temp->member.id);
-        int totalTime = (totalHour*60)+totalMin1;
-        int finalHour = totalTime/60;
-        int finalMin = totalTime%60;
-        gotoxy(45,8);
-        printf("Id                : %s",temp->member.id);
-        gotoxy(45,10);
-        printf("Name              : %s %s",temp->member.first_name,temp->member.last_name);
-        gotoxy(45,12);
-        printf("Total present    -> %d day",present);
-        gotoxy(45,14);
-        printf("Total Absence    -> %d day",absence);
-        gotoxy(45,16);
-        printf("Total time       -> %d hour %d min",finalHour,finalMin);
-        gotoxy(45,18);
-        printf("Base salary      -> %.3lf $",base_salary);
-        gotoxy(45,20);
-        printf("Over Time salary -> %.3lf $",bonus_salary);
-        gotoxy(45,22);
-        printf("Total Salary     -> %.3lf $\n",total_salary);
-
-    }
-    else
-    {
-        gotoxy(45,12);
-        printf("This id number is not here\n");
-    }
-
 
 }
 
@@ -2239,6 +2256,7 @@ int main()
     while(temp != -1);
 
 }
+
 
 
 
