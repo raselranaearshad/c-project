@@ -5,7 +5,7 @@
 #include<stdlib.h>
 #include<windows.h>
 #include<stdbool.h>
-
+// This structure work to get time
 struct times
 {
     WORD wYear;
@@ -20,6 +20,8 @@ struct times
 
 typedef struct times Times;
 
+// This structure work to get admin account information
+
 struct account
 {
     char userName[20];
@@ -28,7 +30,7 @@ struct account
 };
 typedef struct account Account;
 
-
+// this structure work to get daily update information  
 struct dailyCount
 {
     Times entryTime;
@@ -41,8 +43,9 @@ struct dailyCount
 
 typedef struct dailyCount Day;
 
+//Here all new employee all information add this structure
 
-struct Employees        /*Here all new employee all information add this structure*/
+struct Employees        
 {
     char first_name[20];
     char last_name[20];
@@ -79,41 +82,59 @@ void gotoxy(int x,int y)
 
 //<function prototype>
 
-snode* createNode(Employee emp);
-
-Times getTimes();
 void logInMenue();
 void mainMenue();
 void employeeMenue();
+void updateMenu();
+void salaryMenu();
+int userNameTest(char name[20]);
 void signUpAccount();
 int logInAccount(char username[20],char pass[20]);
 int checkAccount();
+int checkCofirmation();
 //File Function
 void addminWriteData();
+void adminReadFileData();
 void employeeWriteFile();
+void employeeReadFile();
 void writeFilePerEmployee(char id[]);
+void readAllEmployeeFile();
+void reportFileWrite();
 //File Function
-void createEmployeeList();
+
+snode* createNode(Employee emp);
 void AddEmployeeLast(Employee list);
+void createEmployeeList();
+
 void all_employe_display();
 void search_employee_Display(char id[]);
 void view_employee_personal_info(char id[]);
 void search_employee_Display_no_2(char id[]);
+void employee_per_month_salary_view();
+void per_employee_salary_view(char id[]);
+void dailyEarningMessageDisplay(char id[]);
+
 int isIdCompare(char id[]);
 void deleteEmployeeInformation(char id[]);
+//<start time function
+Times getTimes();
+Times getCurrentTime();
+int timeCorrection(int hour);
+ //<end time function
 void employee_personal_information_update(char id[]);
 void perDayUpdate(int type);
 double perDayTimeHourCount(int h1,int m1,int h2,int m2,int position);
 double perDayEarningCount(int tmHour,int tmMin,int position);
-void dailyEarningMessageDisplay(char id[]);
 int calculatePresent(char id[]);
 int calculateAbsence(char id[]);
+int gmailVerified(char ch[]);
+int numberFormateCorrection(char arr[]);
 double baseSalaryCalculate(char id[]);
 int totalHourWork(char id[]);
 int totalMin(char id[]);
 double bonusSalaryCalculate();
 double totalMonthlySalary(char id[]);
-void per_employee_salary_view(char id[]);
+void maintainMainMenu();
 
 //</end function prototype>
 
@@ -127,25 +148,6 @@ Account firstAccount[50];
 int start = 0;
 bool checkWriteData = false;
 //</variable>
-
-/*I already used linked list data structure
- * This is the create node function
- * It's create a NewNode
- */
-
-snode* createNode(Employee emp)
-{
-    newnode = (snode*)malloc(sizeof(snode));
-    if(newnode == NULL)
-    {
-        printf("Memory is not allocated\n");
-        return 0;
-    }
-    newnode->member = emp;
-    newnode->next = NULL;
-    return newnode;
-
-}
 
 /*This is the log in display menu*/
 void logInMenue()
@@ -482,25 +484,6 @@ void adminReadFileData()
 }
 
 
-void employeeReadFile()
-{
-    FILE *fp;
-    char firstName[20],lastName[20],id[15],email[30],phoneNumber[12],designation[20];
-    double perRate,overTimeRate;
-    fp = fopen("employee_main_file","r+");
-    if(fp == NULL)
-    {
-        fp = fopen("employee_main_file","w");
-        if(fp == NULL)
-        {
-            exit(1);
-        }
-
-    }
-
-    //fscanf(fp,"%s %s %s %s %s %s %lf %lf %d ",firstName,lastName,id,email,phoneNumber,designation,&perRate,&overTimeRate,&targetHour);
-}
-
 void employeeWriteFile()
 {
     FILE *fp;
@@ -544,6 +527,8 @@ void employeeWriteFile()
 
 
 }
+
+// this function work for write per employee data by their name
 void writeFilePerEmployee(char id[])
 {
     snode *temp = head;
@@ -576,7 +561,7 @@ void writeFilePerEmployee(char id[])
     }
 
 }
-
+//This function work to read all employee data
 void readAllEmployeeFile()
 {
     FILE *fp;
@@ -665,12 +650,56 @@ void reportFileWrite()
         j+=2;
     }
     fclose(report);
+    gotoxy(40,6);
     printf("You Record file create successful\n");
 }
 
 
 //end file
 
+/*I already used linked list data structure
+ * This is the create node function
+ * It's create a NewNode
+ */
+//This function work to create new node
+snode* createNode(Employee emp)
+{
+    newnode = (snode*)malloc(sizeof(snode));
+    if(newnode == NULL)
+    {
+        printf("Memory is not allocated\n");
+        return 0;
+    }
+    newnode->member = emp;
+    newnode->next = NULL;
+    return newnode;
+
+}
+
+
+//Thsi function work to add linked list
+
+void AddEmployeeLast(Employee list)
+{
+
+    newnode = createNode(list);
+    if(head == NULL)
+    {
+        head = newnode;
+        head->next = NULL;
+        return;
+    }
+    snode *temp = head;
+    while(temp->next != NULL)
+    {
+        temp = temp->next;
+    }
+    temp -> next = newnode;
+
+
+}
+
+//This function work to create new employee by their details
 void createEmployeeList()
 {
     int stop;
@@ -789,28 +818,6 @@ void createEmployeeList()
 
 
 }
-
-
-void AddEmployeeLast(Employee list)
-{
-
-    newnode = createNode(list);
-    if(head == NULL)
-    {
-        head = newnode;
-        head->next = NULL;
-        return;
-    }
-    snode *temp = head;
-    while(temp->next != NULL)
-    {
-        temp = temp->next;
-    }
-    temp -> next = newnode;
-
-
-}
-
 
 
 void all_Employe_Display()
@@ -1035,6 +1042,7 @@ int isIdCompare(char id[])// this function compare id number
     return type;
 }
 
+//this function work to delete employee personal information
 void deleteEmployeeInformation(char id[])
 {
     system("cls");
@@ -1105,7 +1113,7 @@ void deleteEmployeeInformation(char id[])
         getch();
     }
 }
-
+// This function work to displauy employee personal information
 void search_employee_Display_no_2(char id[])
 {
     system("cls");
@@ -1156,6 +1164,8 @@ void search_employee_Display_no_2(char id[])
     }
 
 }
+
+//This function work to update employee personal information
 
 void employee_personal_information_update(char id[])
 {
@@ -1308,6 +1318,7 @@ void employee_personal_information_update(char id[])
     }
 
 }
+//this function work to get time
 
 Times getTimes()
 {
@@ -1315,7 +1326,7 @@ Times getTimes()
     GetSystemTime(&tm);
     return tm;
 }
-
+//This function work to get current time
 Times getCurrentTime()
 {
     Times tm = getTimes();
@@ -1327,6 +1338,15 @@ Times getCurrentTime()
     }
     return tm;
 }
+// This function work to correction time
+
+int timeCorrection(int hour)
+{
+    int time = hour + 6;
+    if(time >24) return (time-24);
+    return time;
+}
+//This function work to update daily task
 void perDayUpdate(int type)
 {
 
@@ -1453,6 +1473,8 @@ void perDayUpdate(int type)
 
 }
 
+//this function work to count per day time hour
+
 double perDayTimeHourCount(int h1,int m1,int h2,int m2,int position)
 {
     int tmHour,tmMin,i;
@@ -1517,6 +1539,8 @@ double perDayTimeHourCount(int h1,int m1,int h2,int m2,int position)
 
 }
 
+//this function work to count per day earning
+
 double perDayEarningCount(int tmHour,int tmMin,int position)
 {
     int i;
@@ -1531,12 +1555,8 @@ double perDayEarningCount(int tmHour,int tmMin,int position)
     return perDayTotalEarn;
 }
 
-int timeCorrection(int hour)
-{
-    int time = hour + 6;
-    if(time >24) return (time-24);
-    return time;
-}
+//This function work to display daily working message
+
 void dailyEarningMessageDisplay(char id[])
 {
     system("cls");
@@ -1556,6 +1576,9 @@ void dailyEarningMessageDisplay(char id[])
     gotoxy(45,16);
     printf("Today your Earn         -> %.3lf $\n",temp->member.dayStatistics[currentMonthDay].dailyIncome);
 }
+
+// This function work to display calculate present
+
 int calculatePresent(char id[])
 {
     int i,count = 0;;
@@ -1577,6 +1600,7 @@ int calculatePresent(char id[])
     return count;
 }
 
+//Thsi function work to calculate absence
 
 int calculateAbsence(char id[])
 {
@@ -1662,6 +1686,8 @@ int gmailVerified(char ch[])
     return result;
 }
 
+// Thsi function work to bd mobile number correction
+
 int numberFormateCorrection(char arr[])
 {
     int i,count = 0;
@@ -1676,6 +1702,7 @@ int numberFormateCorrection(char arr[])
 
 }
 
+// This function work to update calculate base salary 
 
 double baseSalaryCalculate(char id[])
 {
@@ -1698,6 +1725,8 @@ double baseSalaryCalculate(char id[])
     return base_salary;
 }
 
+// This function work to count total hour work
+
 int totalHourWork(char id[])
 {
     int i;
@@ -1715,6 +1744,7 @@ int totalHourWork(char id[])
     return hour_count;
 }
 
+// This function wotk to count total minute
 
 int totalMin(char id[])
 {
@@ -1732,6 +1762,8 @@ int totalMin(char id[])
     }
     return min_count;
 }
+
+// this function work to calculate bonus salary
 
 double bonusSalaryCalculate(char id[])
 {
@@ -1762,6 +1794,7 @@ double bonusSalaryCalculate(char id[])
     return bonusTotalEarn;
 }
 
+// Thsi function work to calculate total monthly salary
 
 double totalMonthlySalary(char id[])
 {
@@ -1771,7 +1804,7 @@ double totalMonthlySalary(char id[])
     return totalSalary;
 
 }
-
+// Thsi function work to calculate per month salary
 void employee_per_month_salary_view()
 {
     int i,j=8;
@@ -1831,6 +1864,7 @@ void employee_per_month_salary_view()
     printf("\n");
 }
 
+// This function work to display per month salary
 
 void per_employee_salary_view(char id[])
 {
@@ -1883,7 +1917,7 @@ void per_employee_salary_view(char id[])
 
 }
 
-
+// this function maintain main menu
 
 void maintainMainMenu()
 {
