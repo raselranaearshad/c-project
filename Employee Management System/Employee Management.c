@@ -352,7 +352,7 @@ void salaryMenu()
     printf("\n\n");
 
 }
-// Thsi function work to test user name
+// This function work to test user name
 
 int userNameTest(char name[20])
 {
@@ -370,7 +370,7 @@ int userNameTest(char name[20])
     return flag;
 }
 
-// Thsi function work to create account
+// This function work to create account
 
 void signUpAccount()
 {
